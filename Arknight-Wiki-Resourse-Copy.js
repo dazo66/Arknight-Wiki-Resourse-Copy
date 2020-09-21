@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         ArkNightWiki
 // @namespace    http://dazo66.com/
-// @version      0.1
+// @version      1.0
 // @description  ArkNightWiki
 // @author       dazo66
 // @match        *//ak.mooncell.wiki/*
@@ -11,31 +11,22 @@
 // @grant        none
 // ==/UserScript==
 
-/*!
- * clipboard.js v2.0.5
- * https://clipboardjs.com/
- *
- * Licensed MIT © Zeno Rocha
- */
-
-
 
 (function() {
 
-    const temp = document.getElementsByName('search')[0];
-
     function setClipboard(data) {
-        temp.hiden = false;
-        var v = temp.value
-        temp.setAttribute('readonly', 'readonly');
-        temp.setAttribute('value', data);
-        temp.select();
-        if (document.execCommand('copy')) {
-            document.execCommand('copy');
-            console.log('复制成功');
+        var copy = function (e) {
+            e.preventDefault();
+            if (e.clipboardData) {
+                e.clipboardData.setData('text/plain', data);
+            } else if (window.clipboardData) {
+                window.clipboardData.setData('Text', data);
+            }
         }
-        temp.setAttribute('value', v);
-        temp.removeAttribute('readonly');
+        window.addEventListener('copy', copy);
+        document.execCommand('copy');
+        window.removeEventListener('copy', copy);
+        console.log('复制成功');
     }
 
     function itemToString(list) {
